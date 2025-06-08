@@ -12,8 +12,6 @@ export default function Header() {
   const links = [
     { to: "/", label: "Página inicial" },
     {to: "/selo", label: "Selo"},
-    {to: "/rastreabilidade", label: "Rastreabilidade"},
-
   ];
 
   return (
@@ -28,9 +26,9 @@ export default function Header() {
               
             );
           })}
-        <Button className="ml-4 flex items-center justify-center gap-2" onClick={() => route.push("/produtos")}>
+        <Button className="ml-4 flex items-center justify-center gap-2" onClick={() => route.push("/rastreabilidade")}>
               <Search />
-            Produtos com selo
+            Rastreabilidade
           </Button>
         </nav>
       </div>
