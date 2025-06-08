@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 
-import { ModeToggle } from "./mode-toggle";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
@@ -13,6 +12,7 @@ export default function Header() {
   const links = [
     { to: "/", label: "Página inicial" },
     {to: "/selo", label: "Selo"},
+    {to: "/rastreabilidade", label: "Rastreabilidade"},
 
   ];
 
@@ -28,14 +28,11 @@ export default function Header() {
               
             );
           })}
-        <Button variant="ghost" className="ml-4 flex items-center justify-center gap-2" onClick={() => route.push("/produtos")}>
+        <Button className="ml-4 flex items-center justify-center gap-2" onClick={() => route.push("/produtos")}>
               <Search />
             Produtos com selo
           </Button>
         </nav>
-        <div className="flex items-center gap-4">
-          <ModeToggle />
-        </div>
       </div>
       <hr />
     </div>

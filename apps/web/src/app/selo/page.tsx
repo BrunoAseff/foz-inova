@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Fish, ShieldCheck, Anchor, CheckCircle2, Loader2, PartyPopper } from "lucide-react";
 import { useState, type FormEvent } from 'react';
+import Image from "next/image";
 
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -38,13 +39,17 @@ export default function Selo() {
 
     return (
         <div className="min-h-full w-full antialiased relative flex items-center justify-center">
-            <div className="relative z-10 container mx-auto px-4 py-6">
+            <div className="relative z-10 container mx-auto px-4">
                 <div className="grid lg:grid-cols-2 gap-16 items-center">
                     
                     <div className="space-y-6">
-                        <h1 className="text-4xl md:text-5xl font-bold text-gray-800">
+                        <div className="flex gap-10">
+                        <Image src="/peixe.png" width="150" height="150" alt="Logo mostrando um selo" />
+                         <h1 className="text-5xl md:text-5xl font-bold text-gray-800 font-fell">
                             Junte-se à <span className="text-primary">Origem da Foz</span> e valorize seu trabalho.
                         </h1>
+                        </div>
+                       
                         <p className="text-lg text-gray-600">
                             Nosso selo conecta seu pescado artesanal aos melhores estabelecimentos, gerando mais reconhecimento e lucro para você e mais confiança para o consumidor.
                         </p>
@@ -67,7 +72,7 @@ export default function Selo() {
                         <Card className="w-full max-w-md shadow-lg bg-white/80 backdrop-blur-lg">
                             <CardHeader className="text-center">
                                 {status !== 'success' ? (<>
-                                <CardTitle className="text-2xl">Solicite seu selo</CardTitle>
+                                <CardTitle className="text-2xl font-fell">Solicite seu selo</CardTitle>
                                 <CardDescription>Preencha os dados e entraremos em contato.</CardDescription>
                                 </>) : 
                             (
@@ -91,7 +96,7 @@ export default function Selo() {
                                     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                                         <div className="flex flex-col gap-1.5">
                                             <label htmlFor="nome" className="font-medium text-gray-700">Nome Completo</label>
-                                            <Input type="text" id="nome" placeholder="Seu nome de pescador" required />
+                                            <Input type="text" id="nome" placeholder="Seu nome" required />
                                         </div>
                                         <div className="flex flex-col gap-1.5">
                                             <label htmlFor="cidade" className="font-medium text-gray-700">Cidade/Região de Pesca</label>
