@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { Anchor, Fish, MapPin, Search, User, Waves, Loader2, AlertTriangle, ShipWheel } from "lucide-react";
+// Added ShieldCheck for the new card's icon
+import { Anchor, Waves, MapPin, Search, User, Loader2, AlertTriangle, ShieldCheck } from "lucide-react";
 import { useState, type FormEvent } from 'react';
 import Image from "next/image";
 
+// --- Type Definitions ---
 type Fish = {
     name: string;
     description: string;
@@ -21,26 +23,30 @@ type Fisher = {
     experience: number;
     region: 'Itajaí' | 'Navegantes' | 'Balneário Camboriú';
     bio: string;
-    avatar: string; 
+    avatar: string;
     fishes: Fish[];
+    seals: string[]; // Added seals array
 };
 
+
+// --- Mock Data ---
+// Added a "seals" array to each fisher with placeholder image paths.
 const mockData: Record<string, Fisher> = {
-    '8202840': {
-        id: '8202840',
+    '000000001': {
+        id: '000000001',
         name: 'Carlos Mendes',
         age: 58,
         experience: 40,
         region: 'Itajaí',
-        avatar: '/mendes.png', 
+        avatar: '/mendes.png',
         bio: 'Pescador desde os 18 anos, seguindo a tradição de meu pai e avô. Conheço cada canto da Foz do Rio Itajaí-Açu e me orgulho de trazer o peixe mais fresco para a mesa da nossa gente.',
         fishes: [
             { name: 'Camarão-Rosa', description: 'O mais apreciado da nossa costa, perfeito para moquecas e risotos.', image: '/camarao.jpg' },
-            { name: 'Linguado', description: 'Carne branca e achatada, excelente para grelhados com molhos cítricos.', image: '/linguado.jpg' },
             { name: 'Pescada-Branca', description: 'Um clássico da nossa culinária, com carne macia que desfia facilmente.', image: '/pescada.jpg' },
-            { name: 'Pescada-Branca', description: 'Um clássico da nossa culinária, com carne macia que desfia facilmente.', image: '/tainha.jpg' },
-
+            { name: 'Tainha', description: 'Famosa em nossa região, especialmente na safra de inverno. Sua ova é uma iguaria.', image: '/tainha.jpg' },
+            { name: 'Linguado', description: 'Carne branca e achatada, excelente para grelhados com molhos cítricos.', image: '/linguado.jpg' },
         ],
+        seals: ['/selo2.png', '/selo1.png','/selo3.png', '/selo4.png']
     },
     '3150771': {
         id: '3150771',
@@ -48,20 +54,20 @@ const mockData: Record<string, Fisher> = {
         age: 42,
         experience: 20,
         region: 'Navegantes',
-        avatar: '/mendes.png',
+        avatar: '/juliana-santos.png',
         bio: 'Especialista em pesca de arrasto de camarão e peixes de menor porte. Acredito na pesca sustentável para garantir o futuro do nosso oceano e da nossa comunidade.',
         fishes: [
             { name: 'Camarão-Rosa', description: 'O mais apreciado da nossa costa, perfeito para moquecas e risotos.', image: '/camarao.jpg' },
-            { name: 'Linguado', description: 'Carne branca e achatada, excelente para grelhados com molhos cítricos.', image: '/linguado.jpg' },
             { name: 'Pescada-Branca', description: 'Um clássico da nossa culinária, com carne macia que desfia facilmente.', image: '/pescada.jpg' },
         ],
+        seals: ['/selo1.png', '/selo3.png']
     }
 };
 
 const mapUrls: Record<Fisher['region'], string> = {
-    'Itajaí': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d56965.88998249219!2d-48.69372935136718!3d-26.909566100000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94d8b6732899e289%3A0x6440d43a12513920!2sItaja%C3%AD%20-%20SC!5e0!3m2!1spt-BR!2sbr!4v1717865667654!5m2!1spt-BR!2sbr',
-    'Navegantes': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d56977.8386762319!2d-48.69460984863282!3d-26.88358249999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94d8b51833753c15%3A0x3347f8a335a732e7!2sNavegantes%20-%20SC!5e0!3m2!1spt-BR!2sbr!4v1717865717758!5m2!1spt-BR!2sbr',
-    'Balneário Camboriú': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d56919.148102418606!2d-48.6577883513672!3d-26.9936881!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94d8b61218525389%3A0x7d97f2b963133373!2sBalne%C3%A1rio%20Cambori%C3%BA%20-%20SC!5e0!3m2!1spt-BR!2sbr!4v1717865747432!5m2!1spt-BR!2sbr',
+    'Itajaí': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d56937.98913926304!2d-48.69089932089842!3d-26.905626300000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94d8cc4023a69a03%3A0x3cd624c3ffd44874!2sItaja%C3%AD%2C%20SC!5e0!3m2!1spt-BR!2sbr!4v1672855159075!5m2!1spt-BR!2sbr',
+    'Navegantes': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d56950.41018847647!2d-48.68364855128174!3d-26.88218413156693!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94d8cc9742425ccd%3A0x8054b254378a8733!2sNavegantes%2C%20SC!5e0!3m2!1spt-BR!2sbr!4v1672855203733!5m2!1spt-BR!2sbr',
+    'Balneário Camboriú': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d56895.93233298676!2d-48.65349252089844!3d-26.9936395!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94d8b61213f233f7%3A0xe2c701d84b638f29!2sBalne%C3%A1rio%20Cambori%C3%BA%2C%20SC!5e0!3m2!1spt-BR!2sbr!4v1672855239553!5m2!1spt-BR!2sbr',
 }
 
 
@@ -76,7 +82,7 @@ export default function Rastreabilidade() {
         event.preventDefault();
         setFisher(null);
         setStatus('searching');
-        await new Promise(resolve => setTimeout(resolve, 1500)); 
+        await new Promise(resolve => setTimeout(resolve, 1500));
 
         const foundFisher = mockData[serialNumber.replace('#', '')];
 
@@ -107,7 +113,7 @@ export default function Rastreabilidade() {
                             type="text"
                             value={serialNumber}
                             onChange={(e) => setSerialNumber(e.target.value)}
-                            placeholder="Digite o código do selo, ex: #8202840"
+                            placeholder="Digite o código do selo, ex: #000000001"
                             className="h-14 text-lg flex-1 shadow-sm"
                             required
                         />
@@ -125,6 +131,7 @@ export default function Rastreabilidade() {
                 <div className="mt-16">
                     {status === 'found' && fisher && (
                         <div className="grid lg:grid-cols-5 gap-8 animate-fade-in-up">
+                            {/* --- FISHER CARD (LEFT) --- */}
                             <Card className="lg:col-span-2 shadow-xl bg-white/80 backdrop-blur-lg">
                                 <CardHeader className="text-center">
                                     <Image src={fisher.avatar} alt={fisher.name} width={120} height={120} className="rounded-full mx-auto border-4 border-primary/50 shadow-md" />
@@ -169,48 +176,69 @@ export default function Rastreabilidade() {
                                 </CardContent>
                             </Card>
 
-                            <Card className="lg:col-span-3 h-fit shadow-xl bg-white/80 backdrop-blur-lg flex flex-col">
-                                <CardHeader>
-                                    <div className="flex items-center gap-3">
-                                        <Waves className="h-7 w-7 text-primary" />
-                                        <CardTitle className="text-3xl font-fell">Pescados Comuns</CardTitle>
-                                    </div>
-                                    <CardDescription>Estes são alguns dos peixes que {fisher.name.split(' ')[0]} costuma trazer do mar.</CardDescription>
-                                </CardHeader>
-                                <CardContent className="flex-1 flex items-center justify-center">
-                                    <Carousel className="w-full max-w-xs sm:max-w-sm md:max-w-md" opts={{ loop: true }}>
-                                        <CarouselContent>
-                                            {fisher.fishes.map((fish, index) => (
-                                                <CarouselItem key={index}>
-                                                    <div className="p-1">
-                                                        <Card className="overflow-hidden">
-                                                            <CardContent className="flex flex-col items-center justify-center py-6 px-12 gap-4">
-                                                                <Image src={fish.image} alt={fish.name} width={250} height={250} className="aspect-square object-cover rounded-lg" />
-                                                                <div className="text-center">
-                                                                    <h3 className="text-xl font-semibold text-gray-800">{fish.name}</h3>
-                                                                    <p className="text-gray-600 mt-1">{fish.description}</p>
-                                                                </div>
-                                                            </CardContent>
-                                                        </Card>
-                                                    </div>
-                                                </CarouselItem>
+                            <div className="lg:col-span-3 space-y-8">
+
+                                <Card className="shadow-xl bg-white/80 backdrop-blur-lg">
+                                    <CardHeader>
+                                        <div className="flex items-center gap-3">
+                                            <ShieldCheck className="h-6 w-6 text-primary" />
+                                            <CardTitle className="text-2xl font-fell">Selos de Qualidade</CardTitle>
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="flex flex-wrap gap-6 justify-center">
+                                            {fisher.seals.map((seal, index) => (
+                                                <Image key={index} src={seal} alt={`Selo ${index + 1}`} width={170} height={170} className="hover:scale-110 transition-transform duration-300" />
                                             ))}
-                                        </CarouselContent>
-                                        <CarouselPrevious className="ml-12" />
-                                        <CarouselNext className="mr-12" />
-                                    </Carousel>
-                                </CardContent>
-                            </Card>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+
+                                {/* --- FISH CAROUSEL --- */}
+                                <Card className="shadow-xl bg-white/80 backdrop-blur-lg flex flex-col">
+                                    <CardHeader>
+                                        <div className="flex items-center gap-3">
+                                            <Waves className="h-7 w-7 text-primary" />
+                                            <CardTitle className="text-3xl font-fell">Pescados Comuns</CardTitle>
+                                        </div>
+                                        <CardDescription>Estes são alguns dos peixes que {fisher.name.split(' ')[0]} costuma trazer do mar.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="flex-1 flex items-center justify-center">
+                                        <Carousel className="w-full max-w-xs sm:max-w-sm md:max-w-md" opts={{ loop: true }}>
+                                            <CarouselContent>
+                                                {fisher.fishes.map((fish, index) => (
+                                                    <CarouselItem key={index}>
+                                                        <div className="p-1">
+                                                            <Card className="overflow-hidden">
+                                                                <CardContent className="flex flex-col items-center justify-center py-6 px-12 gap-4">
+                                                                    <Image src={fish.image} alt={fish.name} width={250} height={250} className="aspect-square object-cover rounded-lg" />
+                                                                    <div className="text-center">
+                                                                        <h3 className="text-xl font-semibold text-gray-800">{fish.name}</h3>
+                                                                        <p className="text-gray-600 mt-1">{fish.description}</p>
+                                                                    </div>
+                                                                </CardContent>
+                                                            </Card>
+                                                        </div>
+                                                    </CarouselItem>
+                                                ))}
+                                            </CarouselContent>
+                                            <CarouselPrevious className="ml-12" />
+                                            <CarouselNext className="mr-12" />
+                                        </Carousel>
+                                    </CardContent>
+                                </Card>
+
+                            </div>
                         </div>
                     )}
 
                     {status === 'notFound' && (
                         <div className="text-center animate-fade-in-up max-w-md mx-auto">
-                           <Card className="py-12 px-6 shadow-xl bg-white/80 backdrop-blur-lg">
+                            <Card className="py-12 px-6 shadow-xl bg-white/80 backdrop-blur-lg">
                                 <AlertTriangle className="h-16 w-16 text-amber-500 mx-auto mb-4" />
                                 <h3 className="text-2xl font-semibold text-gray-800 font-fell">Selo não encontrado</h3>
                                 <p className="text-gray-600 mt-2">O código "{serialNumber}" não corresponde a nenhum pescador em nosso sistema. Por favor, verifique o código e tente novamente.</p>
-                           </Card>
+                            </Card>
                         </div>
                     )}
 
