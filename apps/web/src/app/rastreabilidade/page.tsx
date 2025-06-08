@@ -97,7 +97,6 @@ export default function Rastreabilidade() {
     return (
         <div className="min-h-full w-full antialiased bg-gray-50/50">
             <div className="container mx-auto px-4 py-16 md:py-24">
-
                 <div className="max-w-2xl mx-auto text-center">
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-800 font-fell">
                         Rastreie a <span className="text-primary">Origem</span> do seu Pescado
