@@ -2,25 +2,38 @@
 import Link from "next/link";
 
 import { ModeToggle } from "./mode-toggle";
+import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
+import { Search } from "lucide-react";
 
 export default function Header() {
+
+  const route = useRouter()
+
   const links = [
-    { to: "/", label: "Home" },
+    { to: "/", label: "Página inicial" },
+    {to: "/selo", label: "Selo"},
+
   ];
 
   return (
     <div>
-      <div className="flex flex-row items-center justify-between px-2 py-1">
-        <nav className="flex gap-4 text-lg">
+      <div className="flex flex-row items-center justify-between px-8 py-3">
+        <nav className="flex gap-8 items-center justify-center mx-auto">
           {links.map(({ to, label }) => {
             return (
-              <Link key={to} href={to}>
+              <Link className="hover:underline" key={to} href={to}>
                 {label}
               </Link>
+              
             );
           })}
+        <Button variant="ghost" className="ml-4 flex items-center justify-center gap-2" onClick={() => route.push("/produtos")}>
+              <Search />
+            Produtos com selo
+          </Button>
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <ModeToggle />
         </div>
       </div>
